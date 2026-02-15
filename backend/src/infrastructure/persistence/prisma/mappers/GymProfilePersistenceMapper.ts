@@ -3,7 +3,7 @@ import { GymProfile } from '../../../../domain/aggregates/GymProfile.js';
 interface GymProfileRecord {
   id: string;
   userId: string;
-  answers: any[];
+  answers: unknown;
   updatedAt: Date;
 }
 
@@ -16,7 +16,7 @@ export class GymProfilePersistenceMapper {
         userId: record.userId,
         answers: record.answers,
         updatedAt: record.updatedAt,
-      },// ID já existe
+      },
     );
   }
 

@@ -1,7 +1,7 @@
 type GymProfileProps = {
   id: string;
   userId: string;
-  answers: any[];
+  answers: unknown;
   updatedAt: Date;
 };
 
@@ -29,5 +29,13 @@ export class GymProfile {
 
   get updatedAt() {
     return this.props.updatedAt;
+  }
+
+  updateAnswers(newAnswers: unknown): GymProfile {
+    return new GymProfile({
+      ...this.props,
+      answers: newAnswers,
+      updatedAt: new Date(),
+    });
   }
 }

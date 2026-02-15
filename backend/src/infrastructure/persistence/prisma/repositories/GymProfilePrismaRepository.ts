@@ -15,7 +15,7 @@ export class GymProfilePrismaRepository implements GymProfileRepository {
   ) {}
 
   public async create(gymProfile: GymProfile): Promise<GymProfile>{
-
+    console.log('Creating gym profile in database:', gymProfile);
     const dbGymProfile = await this.prisma.gymProfile.create({
       data: {
         id: gymProfile.id,
@@ -54,6 +54,8 @@ export class GymProfilePrismaRepository implements GymProfileRepository {
   }
 
   public async update(gymProfile: GymProfile): Promise<GymProfile> {
+        console.log('Creating gym profile in database:', gymProfile);
+
     const updatedGymProfile = await this.prisma.gymProfile.update({
       where: { id: gymProfile.id },
       data: {

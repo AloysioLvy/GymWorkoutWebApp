@@ -22,7 +22,7 @@ export class CreateUserUseCase  {
       firstName: input.firstName,
       lastName: input.lastName,
       phone: input.phone ?? '',
-      id: crypto.randomUUID(),
+      id: input.id,
     });
 
     await this.userRepository.create(newUser);

@@ -11,7 +11,7 @@ export class UserController  {
     request: FastifyRequest<{ Body: CreateUserDto }>,
     reply: FastifyReply,
   ) {
-    const user = await this.createUserUseCase.execute(request.body);
-    return reply.send(user);
+    const response = await this.createUserUseCase.execute(request.body);
+    return reply.send(response);
   }
 }
