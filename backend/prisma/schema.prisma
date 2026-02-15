@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id        String      @id @default(cuid())
+  email     String      @unique
+  firstName String?
+  lastName  String?
+  phone     String?
+
+  // 1:1 (opcional) com perfil de academia
+  gymProfile GymProfile?
+  // 1:N com treinos gerados / criados
+  workouts   Workout[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GymProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // JSON flexível para perguntas/respostas (ideal para mudanças no formulário)
+  answers Json
+
+  // Versionamento do formulário (ajuda a evoluir perguntas sem quebrar leitura)
+  formVersion String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Exercise {
+  id String @id @default(cuid())
+
+  name             String
+  gifUrl            String?
+  targetMuscles     String?  // se você tiver lista, pode migrar para Json
+  bodyParts         String?  // idem
+  secondaryMuscles  String?  // idem
+  instructions      String?  // pode ser Text em SQL, aqui é String mesmo
+  cachedAt          DateTime?
+
+  // N:N via tabela de junção WorkoutExercise
+  workoutExercises WorkoutExercise[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+}
+
+model Workout {
+  id     String @id @default(cuid())
+  name   String
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // status útil pro "Loading" enquanto a IA gera
+  status String
+
+  // opcional: guardar o output completo da IA (prompt/result) para auditoria/debug
+  aiOutput Json?
+
+  workoutExercises WorkoutExercise[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+}
+
+model WorkoutExercise {
+  id         String @id @default(cuid())
+  workoutId  String
+  exerciseId String
+
+  workout  Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+
+  // Campos típicos do "prescription" do treino
+  order        Int?
+  sets         Int?
+  reps         Int?
+  restSeconds  Int?
+  tempo        String? // ex: "3-1-1"
+  notes        String?
+
+  // se quiser salvar carga/RPE etc
+  loadKg       Float?
+  rpe          Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workoutId])
+  @@index([exerciseId])
+  @@unique([workoutId, exerciseId, order])
+}

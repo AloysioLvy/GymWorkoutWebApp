@@ -1,0 +1,36 @@
+{
+  "name": "gym-workout-backend",
+  "version": "1.0.0",
+  "description": "Gym workout backend - Fastify + Prisma + DDD",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.2",
+    "@prisma/client": "^6.4.1",
+    "fastify": "^5.2.1",
+    "fastify-decorators": "^3.16.1",
+    "fastify-type-provider-zod": "^6.1.0",
+    "inversify": "^7.11.0",
+    "reflect-metadata": "^0.2.2",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "prisma": "^6.4.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "esbuild",
+      "prisma"
+    ]
+  }
+}
