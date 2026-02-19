@@ -1,3 +1,5 @@
+import { internalFetch } from './internal-fetch';
+
 const API_URL = process.env.API_URL ?? 'http://localhost:3001';
 
 export async function createUser(
@@ -6,9 +8,8 @@ export async function createUser(
   firstName: string,
   lastName: string,
 ): Promise<void> {
-  const res = await fetch(`${API_URL}/users`, {
+  const res = await internalFetch(`${API_URL}/users`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ id, email, firstName, lastName }),
   });
 
@@ -19,7 +20,7 @@ export async function createUser(
 
 export async function checkGymProfile(userId: string): Promise<boolean> {
   try {
-    const res = await fetch(`${API_URL}/gym-profile/${userId}`, {
+    const res = await internalFetch(`${API_URL}/gym-profile/${userId}`, {
       cache: 'no-store',
     });
     return res.ok;

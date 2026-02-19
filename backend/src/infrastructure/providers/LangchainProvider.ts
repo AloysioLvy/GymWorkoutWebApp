@@ -54,6 +54,16 @@ REGRAS PARA NOMES DE EXERCÍCIOS:
 - Prefira termos consistentes entre sessões do mesmo plano.
 - Não inclua o número de séries ou repetições no nome do exercício.
 
+REGRAS DE VOLUME E TEMPO:
+- O usuário tem {durationMinutes} minutos por sessão.
+- Para um treino de 90 minutos, gere entre 6 a 8 exercícios por dia.
+- Distribua o treino da seguinte forma:
+    1. Aquecimento (5-10 min)
+    2. Parte Principal (60-70 min): Exercícios de força.
+    3. Finalização/Cardio (10-15 min).
+- Como o nível é {fitnessLevel}, foque em exercícios fundamentais, mas garanta que o volume total preencha o tempo disponível.
+
+
 Respostas do Perfil de Academia:
 {answers}
 

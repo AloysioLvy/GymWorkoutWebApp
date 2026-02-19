@@ -2,9 +2,16 @@ import { withAuth } from '@workos-inc/authkit-nextjs';
 import { createUser, checkGymProfile } from '@/lib/server-api';
 import OnboardingFlow from '@/components/modules/OnboardingFlow';
 import WorkoutDashboard from '@/components/modules/WorkoutDashboard';
+import { redirect } from 'next/navigation';
 
 export default async function Home() {
-  const { user } = await withAuth({ ensureSignedIn: true });
+  let authResult: Awaited<ReturnType<typeof withAuth>>;
+  try {
+    authResult = await withAuth({ ensureSignedIn: true });
+  } catch {
+    redirect('/login');
+  }
+  const { user } = authResult;
 
   const firstName = user.firstName ?? '';
   const lastName = user.lastName ?? '';
