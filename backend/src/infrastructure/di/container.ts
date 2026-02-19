@@ -4,6 +4,11 @@ import { configureMapper } from "./mappers";
 import { configureControllers } from "./controllers";
 import { configureUseCases } from "./useCases";
 import { configureRepositories } from "./repositories";
+import { TYPES } from "../../application/dto/types";
+import { LangchainWorkoutAgentProvider } from "../providers/LangchainProvider";
+import type { WorkoutAgentProvider } from "../../application/provider/WorkoutAgentProvider";
+import { YoutubeVideoProvider } from "../providers/YoutubeVideoProvider";
+import type { IVideoSearchProvider } from "../../application/provider/VideoSearchProvider";
 
 export const container = new Container();
 
@@ -14,3 +19,6 @@ configureMapper(container);
 configureControllers(container);
 configureUseCases(container);
 configureRepositories(container);
+
+container.bind<WorkoutAgentProvider>(TYPES.WorkoutAgentProvider).to(LangchainWorkoutAgentProvider);
+container.bind<IVideoSearchProvider>(TYPES.VideoSearchProvider).to(YoutubeVideoProvider);

@@ -1,9 +1,10 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import SearchBar from '@/components/SearchBar';
-import ExerciseList from '@/components/ExerciseList';
-import { Exercise, searchExercises } from '@/lib/api';
+import SearchBar from '@/components/ui/SearchBar';
+import ExerciseList from '@/components/common/ExerciseList';
+import { Exercise } from '@/types';
+import { searchExercises } from '@/services/api';
 import { handleSignOut } from '@/lib/auth-actions';
 
 interface SearchPageProps {

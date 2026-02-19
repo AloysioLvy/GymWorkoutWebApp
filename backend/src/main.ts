@@ -3,13 +3,15 @@ import { buildServer } from './interface/http/fastify/server';
 import { UserController } from './interface/http/fastify/controllers/UserController';
 import { GymProfileController } from './interface/http/fastify/controllers/GymProfileController';
 import { ExerciseController } from './interface/http/fastify/controllers/ExerciseController';
+import { WorkoutController } from './interface/http/fastify/controllers/WorkoutController';
 
 async function main() {
   const userController = container.get(UserController);
   const gymProfileController = container.get(GymProfileController);
   const exerciseController = container.get(ExerciseController);
+  const workoutController = container.get(WorkoutController);
 
-  const server = await buildServer(userController, gymProfileController, exerciseController);
+  const server = await buildServer(userController, gymProfileController, exerciseController, workoutController);
 
   const port = Number(process.env.PORT) || 3001;
 

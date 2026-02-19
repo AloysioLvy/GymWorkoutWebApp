@@ -79,6 +79,21 @@ model Workout {
   @@index([userId, createdAt])
 }
 
+model ExerciseVideoCache {
+  id             String   @id @default(cuid())
+  normalizedName String   @unique
+  videoId        String
+  videoTitle     String
+  videoUrl       String
+  expiresAt      DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([normalizedName])
+  @@index([expiresAt])
+}
+
 model WorkoutExercise {
   id         String @id @default(cuid())
   workoutId  String

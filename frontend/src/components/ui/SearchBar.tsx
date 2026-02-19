@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Search } from 'lucide-react';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -22,13 +23,14 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   }, [value, onSearch]);
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="relative w-full max-w-2xl">
+      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 pointer-events-none" />
       <input
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Search exercises... (e.g. bench press, squat, deadlift)"
-        className="w-full px-6 py-4 text-lg rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900 placeholder-gray-400"
+        placeholder="Buscar exercícios… (ex: supino, agachamento, rosca)"
+        className="w-full pl-11 pr-5 py-3.5 bg-zinc-950 border border-white/[0.08] rounded-xl text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white/20 transition-colors min-h-[48px]"
       />
     </div>
   );

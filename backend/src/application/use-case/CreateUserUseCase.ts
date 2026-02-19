@@ -14,7 +14,7 @@ export class CreateUserUseCase  {
   async execute(input: CreateUserDto): Promise<UserResponseDto> {
     const userAlreadyExists = await this.userRepository.findByEmail(input.email);
     if (userAlreadyExists) {
-      throw new Error('User with this email already exists');
+      return UserResponseMapper.toResponse(userAlreadyExists);
     }
 
     const newUser = User.create({
