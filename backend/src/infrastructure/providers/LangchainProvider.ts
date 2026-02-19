@@ -75,9 +75,13 @@ Inclua nomes dos exercícios em português, número de séries, repetições, te
 
     const chain = prompt.pipe(this.model).pipe(this.parser);
 
+    const answers = gymProfile.answers as Record<string, unknown>;
+
     const result = await chain.invoke({
-      answers: JSON.stringify(gymProfile.answers, null, 2),
+      answers: JSON.stringify(answers, null, 2),
       format_instructions: formatInstructions,
+      durationMinutes: String(answers.durationMinutes ?? 60),
+      fitnessLevel: String(answers.fitnessLevel ?? 'intermediário'),
     });
 
     return JSON.stringify(result);
