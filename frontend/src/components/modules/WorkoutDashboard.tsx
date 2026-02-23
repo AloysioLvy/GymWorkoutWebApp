@@ -20,6 +20,7 @@ interface SidebarProps {
   recentWorkouts: WorkoutRecord[];
   selectedWorkout: WorkoutRecord | null;
   isGenerating: boolean;
+  reachedLimit: boolean;
   userName: string;
   onViewChange: (v: View) => void;
   onSelectWorkout: (w: WorkoutRecord) => void;
@@ -28,7 +29,7 @@ interface SidebarProps {
 }
 
 function Sidebar({
-  view, recentWorkouts, selectedWorkout, isGenerating, userName,
+  view, recentWorkouts, selectedWorkout, isGenerating, reachedLimit, userName,
   onViewChange, onSelectWorkout, onGenerate, onClose,
 }: SidebarProps) {
   function nav(v: View) { onViewChange(v); onClose?.(); }
@@ -96,12 +97,17 @@ function Sidebar({
       <div className="px-3 pb-3 pt-4 border-t border-white/[0.06]">
         <button
           onClick={generate}
-          disabled={isGenerating}
+          disabled={isGenerating || reachedLimit}
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-black text-sm font-semibold rounded-lg hover:bg-zinc-100 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           <Zap className="w-4 h-4" />
           {isGenerating ? 'Gerando...' : 'Gerar Treino'}
         </button>
+        {reachedLimit && (
+          <p className="mt-2 text-[10px] text-center text-zinc-500">
+            Limite de 2 treinos atingido.
+          </p>
+        )}
       </div>
 
       {/* Usuário */}
@@ -189,11 +195,14 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
     );
   }
 
+  const reachedLimit = workouts.length >= 2;
+
   const sidebarProps: SidebarProps = {
     view,
     recentWorkouts: workouts.slice(0, 3),
     selectedWorkout,
     isGenerating,
+    reachedLimit,
     userName,
     onViewChange: setView,
     onSelectWorkout: setSelectedWorkout,
@@ -275,15 +284,7 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
                       onClick={() => setShowOnboarding(true)}
                       className="px-3 py-2 text-xs text-zinc-500 hover:text-white border border-white/[0.08] hover:border-white/20 rounded-lg transition-colors min-h-[36px]"
                     >
-                      Atualizar perfil
-                    </button>
-                    <button
-                      onClick={handleGenerateWorkout}
-                      disabled={isGenerating}
-                      className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold bg-white text-black rounded-lg hover:bg-zinc-100 active:scale-[0.97] disabled:opacity-40 transition-all min-h-[36px]"
-                    >
-                      <RefreshCw className={`w-3 h-3 ${isGenerating ? 'animate-spin' : ''}`} />
-                      {isGenerating ? 'Gerando...' : 'Regenerar'}
+                      Atualizar treino
                     </button>
                   </div>
                 </div>
@@ -303,12 +304,15 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
                 </div>
                 <button
                   onClick={handleGenerateWorkout}
-                  disabled={isGenerating}
+                  disabled={isGenerating || reachedLimit}
                   className="flex items-center gap-2 px-6 py-3 bg-white text-black text-sm font-semibold rounded-xl hover:bg-zinc-100 active:scale-[0.98] disabled:opacity-40 transition-all min-h-[44px]"
                 >
                   <Zap className="w-4 h-4" />
                   {isGenerating ? 'Gerando...' : 'Gerar Treino'}
                 </button>
+                {reachedLimit && (
+                  <p className="text-zinc-500 text-sm">Limite de 2 treinos por usuário atingido.</p>
+                )}
                 {generateError && <p className="text-red-400 text-sm">{generateError}</p>}
               </div>
             )
@@ -344,7 +348,7 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
 
             <button
               onClick={handleGenerateWorkout}
-              disabled={isGenerating}
+              disabled={isGenerating || reachedLimit}
               className="flex flex-col items-center gap-1 bg-white text-black rounded-2xl min-h-[52px] min-w-[88px] justify-center px-4 disabled:opacity-40 active:scale-95 transition-all"
             >
               <Zap className={`w-5 h-5 ${isGenerating ? 'animate-pulse' : ''}`} />

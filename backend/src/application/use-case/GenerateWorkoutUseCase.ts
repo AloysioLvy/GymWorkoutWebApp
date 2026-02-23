@@ -27,6 +27,13 @@ export class GenerateWorkoutUseCase {
       throw error;
     }
 
+    const existingWorkouts = await this.workoutRepository.findByUserId(input.userId);
+    if (existingWorkouts.length >= 2) {
+      const error = new Error('Limite de 2 treinos por usuário atingido.');
+      (error as any).statusCode = 403;
+      throw error;
+    }
+
     const generatedPlan = await this.workoutAgentProvider.generateWorkoutPlan(gymProfile);
     const parsedPlan = JSON.parse(generatedPlan);
 
