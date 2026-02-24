@@ -1,5 +1,31 @@
 import type { Exercise, WorkoutRecord } from '@/types';
 
+// ---------------------------------------------------------------------------
+// Cache de treinos no localStorage (por userId)
+// ---------------------------------------------------------------------------
+
+const cacheKey = (userId: string) => `gymai_workouts_${userId}`;
+
+function getCachedWorkouts(userId: string): WorkoutRecord[] | null {
+  try {
+    const raw = localStorage.getItem(cacheKey(userId));
+    if (!raw) return null;
+    return JSON.parse(raw) as WorkoutRecord[];
+  } catch {
+    return null;
+  }
+}
+
+function setCachedWorkouts(userId: string, workouts: WorkoutRecord[]): void {
+  try {
+    localStorage.setItem(cacheKey(userId), JSON.stringify(workouts));
+  } catch {
+    // localStorage pode estar cheio ou indisponível
+  }
+}
+
+// ---------------------------------------------------------------------------
+
 export async function searchExercises(query: string): Promise<Exercise[]> {
   if (!query.trim()) return [];
 
@@ -38,10 +64,16 @@ export async function generateWorkout(userId: string): Promise<WorkoutRecord> {
     throw new Error(`Failed to generate workout: ${res.status}`);
   }
 
-  return res.json();
+  const newWorkout: WorkoutRecord = await res.json();
+  const cached = getCachedWorkouts(userId) ?? [];
+  setCachedWorkouts(userId, [newWorkout, ...cached]);
+  return newWorkout;
 }
 
 export async function getWorkoutsByUser(userId: string): Promise<WorkoutRecord[]> {
+  const cached = getCachedWorkouts(userId);
+  if (cached) return cached;
+
   const res = await fetch(`/api/workout/user/${userId}`, {
     cache: 'no-store',
   });
@@ -50,7 +82,9 @@ export async function getWorkoutsByUser(userId: string): Promise<WorkoutRecord[]
     throw new Error(`Failed to fetch workouts: ${res.status}`);
   }
 
-  return res.json();
+  const workouts: WorkoutRecord[] = await res.json();
+  setCachedWorkouts(userId, workouts);
+  return workouts;
 }
 
 export async function getWorkoutById(id: string): Promise<WorkoutRecord> {
