@@ -3,5 +3,5 @@
 import { signOut } from '@workos-inc/authkit-nextjs';
 
 export async function handleSignOut() {
-  await signOut({ returnTo: '/login' });
+  await signOut({ returnTo: '/' });
 }
