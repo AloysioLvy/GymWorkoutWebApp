@@ -30,7 +30,7 @@ export interface WorkoutRecord {
   name: string;
   userId: string;
   status: string;
-  aiOutput: WorkoutPlan;
+  aiOutput: WorkoutPlan | null;
   createdAt: string;
   updatedAt: string;
 }

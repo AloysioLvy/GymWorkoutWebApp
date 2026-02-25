@@ -30,4 +30,11 @@ export class WorkoutPrismaRepository implements WorkoutRepository {
     if (!record) return null;
     return this.mapper.toDomain(record);
   }
+
+  public async updateStatus(id: string, status: string, data?: { aiOutput?: unknown; name?: string }): Promise<void> {
+    await (this.prisma as any).workout.update({
+      where: { id },
+      data: { status, ...(data ?? {}) },
+    });
+  }
 }

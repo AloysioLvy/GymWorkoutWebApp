@@ -16,7 +16,7 @@ function getCachedWorkouts(userId: string): WorkoutRecord[] | null {
   }
 }
 
-function setCachedWorkouts(userId: string, workouts: WorkoutRecord[]): void {
+export function setCachedWorkouts(userId: string, workouts: WorkoutRecord[]): void {
   try {
     localStorage.setItem(cacheKey(userId), JSON.stringify(workouts));
   } catch {
@@ -64,10 +64,15 @@ export async function generateWorkout(userId: string): Promise<WorkoutRecord> {
     throw new Error(`Failed to generate workout: ${res.status}`);
   }
 
-  const newWorkout: WorkoutRecord = await res.json();
+  // Backend retorna 202 + { workoutId, status: 'pending' }
+  const { workoutId } = (await res.json()) as { workoutId: string; status: string };
+
+  // Busca o record completo (com createdAt, name: 'Gerando...', etc.)
+  const pendingWorkout = await getWorkoutById(workoutId);
+
   const cached = getCachedWorkouts(userId) ?? [];
-  setCachedWorkouts(userId, [newWorkout, ...cached]);
-  return newWorkout;
+  setCachedWorkouts(userId, [pendingWorkout, ...cached]);
+  return pendingWorkout;
 }
 
 export async function getWorkoutsByUser(userId: string): Promise<WorkoutRecord[]> {

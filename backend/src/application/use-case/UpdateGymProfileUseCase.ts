@@ -27,7 +27,6 @@ export class UpdateGymProfileUseCase {
         await this.gymProfileRepository.create(newGymProfile);
         return GymProfileResponseMapper.toResponse(newGymProfile);
     }
-    console.log('Existing gym profile found:', existingGymProfile);
 
     const updatedGymProfile = existingGymProfile.updateAnswers(input.answers);
     await this.gymProfileRepository.update(updatedGymProfile);

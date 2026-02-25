@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Check, Dumbbell } from 'lucide-react';
-import { updateGymProfile } from '@/services/api';
+import { generateWorkout, updateGymProfile } from '@/services/api';
 
 interface OnboardingFlowProps {
   userId: string;
@@ -274,6 +274,7 @@ export default function OnboardingFlow({ userId, userName, onComplete }: Onboard
     setError('');
     try {
       await updateGymProfile(userId, answers as unknown as Record<string, unknown>);
+      generateWorkout(userId); // Gera o treino imediatamente após salvar o perfil
       if (onComplete) onComplete();
       else router.refresh();
     } catch {

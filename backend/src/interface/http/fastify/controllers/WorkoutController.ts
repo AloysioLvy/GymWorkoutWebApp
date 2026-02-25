@@ -18,7 +18,7 @@ export class WorkoutController {
     reply: FastifyReply,
   ) {
     const result = await this.generateWorkoutUseCase.execute(request.body);
-    return reply.status(201).send(result);
+    return reply.status(202).send(result);
   }
 
   async getByUser(

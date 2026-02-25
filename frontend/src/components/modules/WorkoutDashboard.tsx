@@ -10,7 +10,7 @@ import OnboardingFlow from '@/components/modules/OnboardingFlow';
 import SearchBar from '@/components/ui/SearchBar';
 import ExerciseList from '@/components/common/ExerciseList';
 import { Exercise, WorkoutRecord } from '@/types';
-import { generateWorkout, getWorkoutsByUser, searchExercises } from '@/services/api';
+import { generateWorkout, getWorkoutById, getWorkoutsByUser, searchExercises, setCachedWorkouts } from '@/services/api';
 import { handleSignOut } from '@/lib/auth-actions';
 
 type View = 'dashboard' | 'search';
@@ -84,7 +84,10 @@ function Sidebar({
                     : 'text-zinc-500 hover:text-white hover:bg-white/[0.04]'
                 }`}
               >
-                <Clock className="w-3.5 h-3.5 shrink-0 text-zinc-700 group-hover:text-zinc-500 transition-colors" />
+                {w.status === 'pending' || w.status === 'processing'
+                  ? <RefreshCw className="w-3.5 h-3.5 shrink-0 text-zinc-600 animate-spin" />
+                  : <Clock className="w-3.5 h-3.5 shrink-0 text-zinc-700 group-hover:text-zinc-500 transition-colors" />
+                }
                 <span className="truncate text-left flex-1 text-xs">{w.name}</span>
                 <ChevronRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-60 transition-opacity" />
               </button>
@@ -160,6 +163,30 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
       .catch(() => {})
       .finally(() => setIsLoadingWorkouts(false));
   }, [userId]);
+
+  // Polling: enquanto houver workout pending/processing, consulta a cada 3s
+  useEffect(() => {
+    const pending = workouts.find(
+      (w) => w.status === 'pending' || w.status === 'processing',
+    );
+    if (!pending) return;
+
+    const timer = setTimeout(async () => {
+      try {
+        const updated = await getWorkoutById(pending.id);
+        setWorkouts((prev) => {
+          const next = prev.map((w) => (w.id === updated.id ? updated : w));
+          setCachedWorkouts(userId, next);
+          return next;
+        });
+        setSelectedWorkout((prev) => (prev?.id === updated.id ? updated : prev));
+      } catch {
+        // ignora erros de rede durante polling
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [workouts, userId]);
 
   const handleSearch = useCallback(async (query: string) => {
     if (!query.trim()) { setExercises([]); setHasSearched(false); return; }
@@ -272,7 +299,12 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
                     <p className="text-[11px] text-zinc-600 uppercase tracking-widest font-medium mb-1.5">
                       Plano Atual
                     </p>
-                    <h1 className="text-2xl font-semibold leading-tight">{selectedWorkout.name}</h1>
+                    <div className="flex items-center gap-2.5">
+                      <h1 className="text-2xl font-semibold leading-tight">{selectedWorkout.name}</h1>
+                      {(selectedWorkout.status === 'pending' || selectedWorkout.status === 'processing') && (
+                        <RefreshCw className="w-4 h-4 text-zinc-500 animate-spin shrink-0" />
+                      )}
+                    </div>
                     <p className="text-sm text-zinc-600 mt-1">
                       {new Date(selectedWorkout.createdAt).toLocaleDateString('pt-BR', {
                         month: 'long', day: 'numeric', year: 'numeric',
