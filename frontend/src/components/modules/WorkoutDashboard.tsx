@@ -222,7 +222,7 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
     );
   }
 
-  const reachedLimit = workouts.length >= 2;
+  const reachedLimit = workouts.length >= 5;
 
   const sidebarProps: SidebarProps = {
     view,
@@ -343,7 +343,7 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
                   {isGenerating ? 'Gerando...' : 'Gerar Treino'}
                 </button>
                 {reachedLimit && (
-                  <p className="text-zinc-500 text-sm">Limite de 2 treinos por usuário atingido.</p>
+                  <p className="text-zinc-500 text-sm">Limite de 5 treinos por usuário atingido.</p>
                 )}
                 {generateError && <p className="text-red-400 text-sm">{generateError}</p>}
               </div>
