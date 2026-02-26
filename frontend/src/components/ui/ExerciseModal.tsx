@@ -49,8 +49,13 @@ export default function ExerciseModal({ exercise, onClose }: ExerciseModalProps)
       {/* Panel */}
       <div className="relative w-full sm:max-w-lg max-h-[90dvh] bg-zinc-950 border border-white/[0.08] rounded-t-2xl sm:rounded-2xl flex flex-col overflow-hidden shadow-2xl">
 
+        {/* Drag handle — mobile only */}
+        <div className="flex justify-center pt-3 pb-1 sm:hidden shrink-0">
+          <div className="w-8 h-1 bg-zinc-700 rounded-full" />
+        </div>
+
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4 shrink-0">
+        <div className="flex items-start justify-between gap-4 px-6 pt-4 sm:pt-6 pb-4 shrink-0">
           <h2 className="text-base font-semibold capitalize leading-snug">{exercise.name}</h2>
           <button
             onClick={onClose}

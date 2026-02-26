@@ -5,11 +5,17 @@ import { Search } from 'lucide-react';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
+  focusTrigger?: number;
 }
 
-export default function SearchBar({ onSearch }: SearchBarProps) {
+export default function SearchBar({ onSearch, focusTrigger }: SearchBarProps) {
   const [value, setValue] = useState('');
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (focusTrigger) inputRef.current?.focus();
+  }, [focusTrigger]);
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -26,6 +32,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     <div className="relative w-full max-w-2xl">
       <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 pointer-events-none" />
       <input
+        ref={inputRef}
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}

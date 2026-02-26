@@ -26,13 +26,14 @@ interface SidebarProps {
   onSelectWorkout: (w: WorkoutRecord) => void;
   onGenerate: () => void;
   onClose?: () => void;
+  onSearchFocus?: () => void;
 }
 
 function Sidebar({
   view, recentWorkouts, selectedWorkout, isGenerating, reachedLimit, userName,
-  onViewChange, onSelectWorkout, onGenerate, onClose,
+  onViewChange, onSelectWorkout, onGenerate, onClose, onSearchFocus,
 }: SidebarProps) {
-  function nav(v: View) { onViewChange(v); onClose?.(); }
+  function nav(v: View) { onViewChange(v); onClose?.(); if (v === 'search') onSearchFocus?.(); }
   function pick(w: WorkoutRecord) { onSelectWorkout(w); onViewChange('dashboard'); onClose?.(); }
   function generate() { onGenerate(); onClose?.(); }
 
@@ -152,6 +153,7 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [translatedTerm, setTranslatedTerm] = useState('');
+  const [searchFocusTrigger, setSearchFocusTrigger] = useState(0);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -236,6 +238,7 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
     onViewChange: setView,
     onSelectWorkout: setSelectedWorkout,
     onGenerate: handleGenerateWorkout,
+    onSearchFocus: () => setSearchFocusTrigger((t) => t + 1),
   };
 
   return (
@@ -359,7 +362,7 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
                 <p className="text-[11px] text-zinc-600 uppercase tracking-widest font-medium mb-1.5">Biblioteca</p>
                 <h1 className="text-2xl font-semibold">Busca de Exercícios</h1>
               </div>
-              <SearchBar onSearch={handleSearch} />
+              <SearchBar onSearch={handleSearch} focusTrigger={searchFocusTrigger} />
               {translatedTerm && (
                 <p className="mt-3 text-xs text-zinc-500">
                   Buscando por: <span className="text-zinc-300 font-medium">{translatedTerm}</span>
@@ -395,7 +398,7 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
             </button>
 
             <button
-              onClick={() => setView('search')}
+              onClick={() => { setView('search'); setSearchFocusTrigger((t) => t + 1); }}
               className={`flex flex-col items-center gap-1 min-h-[44px] min-w-[64px] justify-center px-3 transition-colors ${
                 view === 'search' ? 'text-white' : 'text-zinc-600 hover:text-zinc-400'
               }`}
