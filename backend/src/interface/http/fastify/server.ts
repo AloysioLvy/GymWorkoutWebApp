@@ -39,15 +39,6 @@ export async function buildServer(userController: UserController, gymProfileCont
     maxRetriesPerRequest: 1,
   });
 
-  await app.register(rateLimit, {
-    redis,
-    max: 10,
-    timeWindow: '1 minute',
-    keyGenerator: (req) => req.ip ?? 'unknown',
-    skip: (req) => !req.url.startsWith('/exercises'),
-    errorResponseBuilder: () => ({ error: 'Muitas buscas. Aguarde um momento.' }),
-  });
-
   // Bloqueia requisições que não vêm do BFF interno
   const internalSecret = process.env.INTERNAL_API_SECRET;
   app.addHook('onRequest', async (request, reply) => {
@@ -85,8 +76,19 @@ export async function buildServer(userController: UserController, gymProfileCont
 
   app.register(userRoutes(userController), { prefix: '/users' });
   app.register(gymProfileRoutes(gymProfileController), { prefix: '/gym-profile' });
-  app.register(exerciseRoutes(exerciseController), { prefix: '/exercises' });
   app.register(workoutRoutes(workoutController), { prefix: '/workout' });
+
+  // Exercises: scoped plugin so rate limit applies only here
+  app.register(async (scope) => {
+    await scope.register(rateLimit, {
+      redis,
+      max: 10,
+      timeWindow: '1 minute',
+      keyGenerator: (req) => req.ip ?? 'unknown',
+      errorResponseBuilder: () => ({ error: 'Muitas buscas. Aguarde um momento.' }),
+    });
+    scope.register(exerciseRoutes(exerciseController));
+  }, { prefix: '/exercises' });
 
   return app;
 }

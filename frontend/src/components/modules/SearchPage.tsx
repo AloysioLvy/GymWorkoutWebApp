@@ -30,8 +30,8 @@ export default function SearchPage({ user }: SearchPageProps) {
     setIsLoading(true);
     setHasSearched(true);
 
-    const results = await searchExercises(query);
-    setExercises(results);
+    const { exercises } = await searchExercises(query);
+    setExercises(exercises);
     setIsLoading(false);
   }, []);
 

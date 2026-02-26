@@ -42,6 +42,7 @@ services:
       INTERNAL_API_SECRET: ${INTERNAL_API_SECRET}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
+      EXERCISEDB_API_URL: ${EXERCISEDB_API_URL}
     depends_on:
       postgres:
         condition: service_healthy
