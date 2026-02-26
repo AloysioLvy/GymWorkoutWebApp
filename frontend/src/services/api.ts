@@ -1,5 +1,7 @@
 import type { Exercise, WorkoutRecord } from '@/types';
 
+type SearchExercisesResult = { exercises: Exercise[]; translatedTerm: string };
+
 // ---------------------------------------------------------------------------
 // Cache de treinos no localStorage (por userId)
 // ---------------------------------------------------------------------------
@@ -26,16 +28,14 @@ export function setCachedWorkouts(userId: string, workouts: WorkoutRecord[]): vo
 
 // ---------------------------------------------------------------------------
 
-export async function searchExercises(query: string): Promise<Exercise[]> {
-  if (!query.trim()) return [];
+export async function searchExercises(query: string): Promise<SearchExercisesResult> {
+  if (!query.trim()) return { exercises: [], translatedTerm: '' };
 
-  const res = await fetch(
-    `/api/exercises/search?q=${encodeURIComponent(query)}`,
-  );
+  const res = await fetch(`/api/exercises/search?q=${encodeURIComponent(query)}`);
+  if (!res.ok) return { exercises: [], translatedTerm: '' };
 
-  if (!res.ok) return [];
-
-  return res.json();
+  const data = await res.json();
+  return { exercises: data.results ?? [], translatedTerm: data.translatedTerm ?? '' };
 }
 
 export async function updateGymProfile(

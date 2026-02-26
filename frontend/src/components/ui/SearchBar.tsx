@@ -15,7 +15,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       onSearch(value);
-    }, 300);
+    }, 700);
 
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);

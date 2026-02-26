@@ -2,11 +2,15 @@ import { Exercise } from '@/types';
 
 interface ExerciseCardProps {
   exercise: Exercise;
+  onClick: (exercise: Exercise) => void;
 }
 
-export default function ExerciseCard({ exercise }: ExerciseCardProps) {
+export default function ExerciseCard({ exercise, onClick }: ExerciseCardProps) {
   return (
-    <div className="bg-zinc-950 border border-white/[0.06] rounded-xl overflow-hidden hover:border-white/[0.12] transition-colors">
+    <div
+      onClick={() => onClick(exercise)}
+      className="bg-zinc-950 border border-white/[0.06] rounded-xl overflow-hidden hover:border-white/20 hover:bg-zinc-900/50 transition-all cursor-pointer"
+    >
       {exercise.gifUrl && (
         <div className="bg-zinc-900 border-b border-white/[0.06]">
           <img

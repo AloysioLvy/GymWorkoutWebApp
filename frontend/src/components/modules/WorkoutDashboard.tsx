@@ -151,6 +151,7 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [translatedTerm, setTranslatedTerm] = useState('');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -189,11 +190,12 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
   }, [workouts, userId]);
 
   const handleSearch = useCallback(async (query: string) => {
-    if (!query.trim()) { setExercises([]); setHasSearched(false); return; }
+    if (!query.trim()) { setExercises([]); setHasSearched(false); setTranslatedTerm(''); return; }
     setIsSearching(true);
     setHasSearched(true);
-    const results = await searchExercises(query);
-    setExercises(results);
+    const { exercises, translatedTerm: term } = await searchExercises(query);
+    setExercises(exercises);
+    setTranslatedTerm(term);
     setIsSearching(false);
   }, []);
 
@@ -358,6 +360,11 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
                 <h1 className="text-2xl font-semibold">Busca de Exercícios</h1>
               </div>
               <SearchBar onSearch={handleSearch} />
+              {translatedTerm && (
+                <p className="mt-3 text-xs text-zinc-500">
+                  Buscando por: <span className="text-zinc-300 font-medium">{translatedTerm}</span>
+                </p>
+              )}
               <div className="mt-8">
                 <ExerciseList exercises={exercises} isLoading={isSearching} hasSearched={hasSearched} />
               </div>
