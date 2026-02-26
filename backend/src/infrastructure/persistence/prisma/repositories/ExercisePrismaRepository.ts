@@ -37,13 +37,14 @@ export class ExercisePrismaRepository implements ExerciseRepository {
   }
 
   public async create(exercise: Exercise): Promise<Exercise> {
-    const dbExercise = await this.prisma.exercise.create({
+    const dbExercise = await (this.prisma as any).exercise.create({
       data: {
         id: exercise.id,
         name: exercise.name,
         gifUrl: exercise.gifUrl,
         targetMuscles: exercise.targetMuscles,
         bodyParts: exercise.bodyParts,
+        equipments: exercise.equipments,
         secondaryMuscles: exercise.secondaryMuscles,
         instructions: exercise.instructions,
         cachedAt: exercise.cachedAt,
@@ -51,5 +52,34 @@ export class ExercisePrismaRepository implements ExerciseRepository {
     });
 
     return this.mapper.toDomain(dbExercise);
+  }
+
+  public async upsertMany(exercises: Exercise[]): Promise<void> {
+    for (const exercise of exercises) {
+      await (this.prisma as any).exercise.upsert({
+        where: { id: exercise.id },
+        update: {
+          name: exercise.name,
+          gifUrl: exercise.gifUrl,
+          targetMuscles: exercise.targetMuscles,
+          bodyParts: exercise.bodyParts,
+          equipments: exercise.equipments,
+          secondaryMuscles: exercise.secondaryMuscles,
+          instructions: exercise.instructions,
+          cachedAt: exercise.cachedAt,
+        },
+        create: {
+          id: exercise.id,
+          name: exercise.name,
+          gifUrl: exercise.gifUrl,
+          targetMuscles: exercise.targetMuscles,
+          bodyParts: exercise.bodyParts,
+          equipments: exercise.equipments,
+          secondaryMuscles: exercise.secondaryMuscles,
+          instructions: exercise.instructions,
+          cachedAt: exercise.cachedAt,
+        },
+      });
+    }
   }
 }

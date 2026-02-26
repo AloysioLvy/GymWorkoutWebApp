@@ -1,8 +1,10 @@
 import 'reflect-metadata';
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import rateLimit from '@fastify/rate-limit';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
+import Redis from 'ioredis';
 import {
   serializerCompiler,
   validatorCompiler,
@@ -28,6 +30,22 @@ export async function buildServer(userController: UserController, gymProfileCont
   await app.register(cors, {
     origin: allowedOrigin,
     credentials: true,
+  });
+
+  const redis = new Redis({
+    host: process.env.REDIS_HOST ?? 'localhost',
+    port: Number(process.env.REDIS_PORT ?? 6379),
+    enableOfflineQueue: false,
+    maxRetriesPerRequest: 1,
+  });
+
+  await app.register(rateLimit, {
+    redis,
+    max: 10,
+    timeWindow: '1 minute',
+    keyGenerator: (req) => req.ip ?? 'unknown',
+    skip: (req) => !req.url.startsWith('/exercises'),
+    errorResponseBuilder: () => ({ error: 'Muitas buscas. Aguarde um momento.' }),
   });
 
   // Bloqueia requisições que não vêm do BFF interno

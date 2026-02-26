@@ -8,6 +8,7 @@ import { GetWorkoutByIdUseCase } from "../../application/use-case/GetWorkoutById
 import { EnrichWorkoutWithVideosUseCase } from "../../application/use-case/EnrichWorkoutWithVideosUseCase";
 import { ShareWorkoutUseCase } from "../../application/use-case/ShareWorkoutUseCase";
 import { GetSharedWorkoutUseCase } from "../../application/use-case/GetSharedWorkoutUseCase";
+import { GetExerciseByIdUseCase } from "../../application/use-case/GetExerciseByIdUseCase";
 
 export function configureUseCases(container: Container){
     container.bind(CreateUserUseCase).toSelf();
@@ -19,4 +20,5 @@ export function configureUseCases(container: Container){
     container.bind(GetWorkoutByIdUseCase).toSelf();
     container.bind(ShareWorkoutUseCase).toSelf();
     container.bind(GetSharedWorkoutUseCase).toSelf();
+    container.bind(GetExerciseByIdUseCase).toSelf();
 }

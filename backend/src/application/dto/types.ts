@@ -6,4 +6,5 @@ export const TYPES = {
   WorkoutAgentProvider: Symbol.for("WorkoutAgentProvider"),
   VideoSearchProvider: Symbol.for("VideoSearchProvider"),
   ExerciseVideoCacheRepository: Symbol.for("ExerciseVideoCacheRepository"),
+  ExerciseTranslatorProvider: Symbol.for("ExerciseTranslatorProvider"),
 };

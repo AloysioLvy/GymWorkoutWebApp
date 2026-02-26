@@ -7,6 +7,7 @@ interface ExerciseRecord {
   gifUrl: string | null;
   targetMuscles: string | null;
   bodyParts: string | null;
+  equipments: string | null;
   secondaryMuscles: string | null;
   instructions: string | null;
   cachedAt: Date | null;
@@ -21,6 +22,7 @@ export class ExercisePersistenceMapper {
       gifUrl: record.gifUrl,
       targetMuscles: record.targetMuscles,
       bodyParts: record.bodyParts,
+      equipments: record.equipments,
       secondaryMuscles: record.secondaryMuscles,
       instructions: record.instructions,
       cachedAt: record.cachedAt,

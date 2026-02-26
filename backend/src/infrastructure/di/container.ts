@@ -9,6 +9,8 @@ import { LangchainWorkoutAgentProvider } from "../providers/LangchainProvider";
 import type { WorkoutAgentProvider } from "../../application/provider/WorkoutAgentProvider";
 import { YoutubeVideoProvider } from "../providers/YoutubeVideoProvider";
 import type { IVideoSearchProvider } from "../../application/provider/VideoSearchProvider";
+import { LangchainExerciseTranslatorProvider } from "../providers/LangchainExerciseTranslatorProvider";
+import type { ExerciseTranslatorProvider } from "../../application/provider/ExerciseTranslatorProvider";
 
 export const container = new Container();
 
@@ -22,3 +24,4 @@ configureRepositories(container);
 
 container.bind<WorkoutAgentProvider>(TYPES.WorkoutAgentProvider).to(LangchainWorkoutAgentProvider);
 container.bind<IVideoSearchProvider>(TYPES.VideoSearchProvider).to(YoutubeVideoProvider);
+container.bind<ExerciseTranslatorProvider>(TYPES.ExerciseTranslatorProvider).to(LangchainExerciseTranslatorProvider);

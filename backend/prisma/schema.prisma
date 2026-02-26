@@ -44,10 +44,11 @@ model Exercise {
 
   name             String
   gifUrl            String?
-  targetMuscles     String?  // se você tiver lista, pode migrar para Json
-  bodyParts         String?  // idem
-  secondaryMuscles  String?  // idem
-  instructions      String?  // pode ser Text em SQL, aqui é String mesmo
+  targetMuscles     String?
+  bodyParts         String?
+  equipments        String?
+  secondaryMuscles  String?
+  instructions      String?
   cachedAt          DateTime?
 
   // N:N via tabela de junção WorkoutExercise
