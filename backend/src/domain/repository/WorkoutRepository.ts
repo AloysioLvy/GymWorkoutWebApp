@@ -5,4 +5,6 @@ export interface WorkoutRepository {
   findByUserId(userId: string): Promise<Workout[]>;
   findById(id: string): Promise<Workout | null>;
   updateStatus(id: string, status: string, data?: { aiOutput?: unknown; name?: string }): Promise<void>;
+  findByShareToken(token: string): Promise<Workout | null>;
+  setShareToken(id: string, token: string): Promise<void>;
 }

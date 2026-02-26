@@ -37,4 +37,17 @@ export class WorkoutPrismaRepository implements WorkoutRepository {
       data: { status, ...(data ?? {}) },
     });
   }
+
+  public async findByShareToken(token: string): Promise<Workout | null> {
+    const record = await (this.prisma as any).workout.findUnique({ where: { shareToken: token } });
+    if (!record) return null;
+    return this.mapper.toDomain(record);
+  }
+
+  public async setShareToken(id: string, token: string): Promise<void> {
+    await (this.prisma as any).workout.update({
+      where: { id },
+      data: { shareToken: token },
+    });
+  }
 }

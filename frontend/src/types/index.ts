@@ -33,4 +33,5 @@ export interface WorkoutRecord {
   aiOutput: WorkoutPlan | null;
   createdAt: string;
   updatedAt: string;
+  shareToken?: string | null;
 }

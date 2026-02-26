@@ -323,7 +323,7 @@ export default function WorkoutDashboard({ userId, userName }: WorkoutDashboardP
                 {generateError && (
                   <p className="text-red-400 text-sm mb-6">{generateError}</p>
                 )}
-                <WorkoutResult plan={selectedWorkout.aiOutput} />
+                <WorkoutResult plan={selectedWorkout.aiOutput} workoutId={selectedWorkout.id} />
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center min-h-[60vh] gap-5 text-center">

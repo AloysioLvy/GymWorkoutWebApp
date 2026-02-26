@@ -103,3 +103,10 @@ export async function getWorkoutById(id: string): Promise<WorkoutRecord> {
 
   return res.json();
 }
+
+export async function shareWorkout(workoutId: string): Promise<string> {
+  const res = await fetch(`/api/workout/${workoutId}/share`, { method: 'POST' });
+  if (!res.ok) throw new Error('Failed to share workout');
+  const { shareToken } = await res.json();
+  return `${window.location.origin}/shared/${shareToken}`;
+}

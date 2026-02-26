@@ -6,6 +6,7 @@ type WorkoutProps = {
   aiOutput: unknown;
   createdAt: Date;
   updatedAt: Date;
+  shareToken?: string | null;
 };
 
 export class Workout {
@@ -26,4 +27,5 @@ export class Workout {
   get aiOutput() { return this.props.aiOutput; }
   get createdAt() { return this.props.createdAt; }
   get updatedAt() { return this.props.updatedAt; }
+  get shareToken() { return this.props.shareToken ?? null; }
 }

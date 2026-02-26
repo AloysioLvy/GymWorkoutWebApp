@@ -71,6 +71,9 @@ model Workout {
   // opcional: guardar o output completo da IA (prompt/result) para auditoria/debug
   aiOutput Json?
 
+  // token único para compartilhamento público
+  shareToken String? @unique
+
   workoutExercises WorkoutExercise[]
 
   createdAt DateTime @default(now())

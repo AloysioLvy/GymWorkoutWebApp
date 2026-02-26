@@ -8,6 +8,7 @@ interface WorkoutRecord {
   aiOutput: unknown;
   createdAt: Date;
   updatedAt: Date;
+  shareToken?: string | null;
 }
 
 export class WorkoutPersistenceMapper {
@@ -20,6 +21,7 @@ export class WorkoutPersistenceMapper {
       aiOutput: record.aiOutput,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
+      shareToken: record.shareToken,
     });
   }
 
@@ -30,6 +32,7 @@ export class WorkoutPersistenceMapper {
       userId: workout.userId,
       status: workout.status,
       aiOutput: workout.aiOutput,
+      shareToken: workout.shareToken,
     };
   }
 }
