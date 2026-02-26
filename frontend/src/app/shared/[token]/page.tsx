@@ -2,7 +2,10 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Dumbbell, Zap } from 'lucide-react';
 import WorkoutResult from '@/components/modules/WorkoutResult';
+import { internalFetch } from '@/lib/internal-fetch';
 import type { WorkoutPlan } from '@/types';
+
+const API_URL = process.env.API_URL ?? 'http://localhost:3001';
 
 interface SharedWorkoutData {
   id: string;
@@ -13,9 +16,8 @@ interface SharedWorkoutData {
 }
 
 async function getSharedWorkout(token: string): Promise<SharedWorkoutData | null> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
   try {
-    const res = await fetch(`${baseUrl}/api/shared/${token}`, {
+    const res = await internalFetch(`${API_URL}/workout/shared/${token}`, {
       cache: 'no-store',
     });
     if (res.status === 404) return null;
