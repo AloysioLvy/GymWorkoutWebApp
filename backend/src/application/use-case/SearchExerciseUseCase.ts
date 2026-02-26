@@ -21,7 +21,7 @@ interface ExerciseDbExercise {
 }
 
 const EXERCISEDB_SEARCH_URL =
-  process.env.EXERCISEDB_API_URL ?? 'https://exercisedb.dev/api/v1/exercises/search';
+  process.env.EXERCISEDB_API_URL;
 
 @injectable()
 export class SearchExerciseUseCase {
